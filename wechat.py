@@ -76,7 +76,7 @@ def input_help(_help):
         command = input('>> Type "r" select in recent , "l" select last conversation, or type user_name:\n')
 
         # choose a person in all friends list
-        if command not in ['l','r']:
+        if command and command not in ['l','r']:
             try:
                 get_all_friends()
             except:
@@ -105,7 +105,7 @@ def input_help(_help):
             print(user_name)
 
         # choose a person in 10 recent contact person
-        if command == 'r':
+        if command == 'r' or not command:
             if not user_list:
                 print('>>> no recent user !!!\n')
                 continue
@@ -121,13 +121,15 @@ def input_help(_help):
                 num = int(input_one)
                 if num>10 or num <1:
                     print('>>> You type a bad index ...\n')
-                    continue
-                user_name = user_list[num-1]
+                    user_name = user_list[0]
+                else:
+                    user_name = user_list[num-1]
             else:
                 if input_one not in user_list:
                     print('>>>You type a bad user_name ...\n')
-                    continue
-                user_name =input_one
+                    user_name = user_list[0]
+                else:
+                    user_name =input_one
 
         # choose a person previous connect with
         if command == 'l':
@@ -152,7 +154,7 @@ def input_help(_help):
 
             user = itchat.search_friends(name=user_name)[0]
             user.send(message)
-            line_message = get_datetime() +''+ 'Me' + ':  ' + message
+            line_message = get_datetime() +''+ '* Me *' + ':  ' + message
             handle_user(user_name)
             handle_message(user_name, line_message)
 
