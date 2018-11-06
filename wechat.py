@@ -16,8 +16,8 @@ a_lock = _thread.allocate_lock()
 b_lock = _thread.allocate_lock()
 
 # create a socket send message to local server
-tcpCliSock = socket(AF_INET, SOCK_STREAM)
-tcpCliSock.connect(('127.0.0.1', 8888))
+# tcpCliSock = socket(AF_INET, SOCK_STREAM)
+# tcpCliSock.connect(('127.0.0.1', 8888))
 
 
 
@@ -56,17 +56,16 @@ def handle_message(user_name,line_message):
 def send_to_scroll_server(message):
     """send received message to local server for print"""
     try:
-        global tcpCliSock
+        tcpCliSock = socket(AF_INET, SOCK_STREAM)
+        tcpCliSock.connect(('127.0.0.1', 8888))
         try:
             message = message.encode('utf-8', 'ignore')
         except Exception as e:
             print(e)
             message = '不支持的消息'.encode('utf-8')
         tcpCliSock.send(message)
-    except Exception as e:
         tcpCliSock.close()
-        tcpCliSock = socket(AF_INET, SOCK_STREAM)
-        tcpCliSock.connect(('127.0.0.1', 8888))
+    except Exception as e:
         print(e)
 
 
