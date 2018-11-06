@@ -6,6 +6,7 @@ import itchat
 import _thread
 from socket import *
 
+
 # get user list and message dict to save user and message
 user_list = list()
 message_dict = dict()
@@ -138,7 +139,7 @@ def input_help(_help):
             user_name = user_list[0]
 
         # handle bad input
-        else:
+        if command not in ['a','r','s','b()']:
             print('>> bad input \n')
             continue
 
@@ -196,6 +197,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
 
 
 
