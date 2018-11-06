@@ -19,11 +19,6 @@ all_friends_line =''
 a_lock = _thread.allocate_lock()
 b_lock = _thread.allocate_lock()
 
-# create a socket send message to local server
-# tcpCliSock = socket(AF_INET, SOCK_STREAM)
-# tcpCliSock.connect(('127.0.0.1', 8888))
-
-
 
 
 def get_datetime():
@@ -53,6 +48,7 @@ def handle_message(user_name,line_message):
         message_dict[user_name] = [line_message]
     else:
         message_dict[user_name].append(line_message)
+    handle_message(user_name, line_message)
     b_lock.release()
 
 
@@ -220,7 +216,7 @@ def print_content(msg):
     handle_user(user_name)
     line_message = get_datetime() +''+user_name + ':  ' + message
     send_to_scroll_server(line_message)
-    handle_message(user_name, line_message)
+    
 
 
 
