@@ -48,7 +48,7 @@ def handle_message(user_name,line_message):
         message_dict[user_name] = [line_message]
     else:
         message_dict[user_name].append(line_message)
-    handle_message(user_name, line_message)
+    send_to_scroll_server(line_message)
     b_lock.release()
 
 
@@ -75,11 +75,10 @@ def input_help(_help):
     print(_help)
     time.sleep(5)
     while 1:
-        command = input('>> Type "s" select in recent(10) , "r" select last user , or type a user_name:\n')
+        command = input('>> Type "r" select in recent , "l" select last conversation, or type user_name:\n')
 
-
-        if not user_list:
-            # choose a person in all friends list
+        # choose a person in all friends list
+        if command not in ['l','r']:
             try:
                 get_all_friends()
             except:
@@ -90,82 +89,54 @@ def input_help(_help):
                 user_name = command
             else:
                 print(all_friends_line)
-                input_zero = input('>>No more recent user ,type a user (index or name)'
-                            ' to send, type "b" to back:\n')
-                if input_zero ==  'b':
-                    continue
+                if not user_list:
+                    input_zero = input('>>No more recent user ,type a user (index or name) to send:\n')
                 else:
-                    if input_zero.isdigit():
-                        num = int(input_zero)
-                        if num>len(all_friends_list) or num<1:
-                            print('You type a bad index ...')
-                            continue
-                        user_name = all_friends_list[num-1]
-                    else:
-                        if input_zero not in all_friends_list:
-                            print('You type a bad user_name ...')
-                            continue
-                        user_name = input_zero
+                    input_zero = input('>>Type a user (index or name) to send:\n')
+                if input_zero.isdigit():
+                    num = int(input_zero)
+                    if num>len(all_friends_list) or num<1:
+                        print('>>> You type a bad index ...\n')
+                        continue
+                    user_name = all_friends_list[num-1]
+                else:
+                    if input_zero not in all_friends_list:
+                        print('>>> You type a bad user_name ...\n')
+                        continue
+                    user_name = input_zero
             print(user_name)
 
-
-        if user_list :
-            # choose a person in all friends list
-            if command not in ['s','r']:
-                try:
-                    get_all_friends()
-                except:
-                    print('log in error !!!')
-                    time.sleep(3)
+        # choose a person in 10 recent contact person
+        if command == 'r':
+            if not user_list:
+                print('>>> no recent user !!!\n')
+                continue
+            line = ''
+            for i,j in enumerate(user_list):
+                line += str(i+1)  +'：'+  j + '; '
+            print(line)
+            input_one = input('>> There are recent users ,type a user (index or name)'
+                        ' to send message,type "b" to back:\n')
+            if input_one == 'b':
+                continue
+            if input_one.isdigit():
+                num = int(input_one)
+                if num>10 or num <1:
+                    print('>>> You type a bad index ...\n')
                     continue
-                if command in all_friends_list:
-                    user_name = command
-                else:
-                    print(all_friends_line)
-                    input_zero = input('>>type a user (index or name)'
-                                ' to send, type "b" to back:\n')
-                    if input_zero ==  'b':
-                        continue
-                    else:
-                        if input_zero.isdigit():
-                            num = int(input_zero)
-                            if num>len(all_friends_list) or num<1:
-                                print('You type a bad index ...')
-                                continue
-                            user_name = all_friends_list[num-1]
-                        else:
-                            if input_zero not in all_friends_list:
-                                print('You type a bad user_name ...')
-                                continue
-                            user_name = input_zero
-                print(user_name)
-
-            # choose a person in 10 recent contact person
-            if command == 's':
-                line = ''
-                for i,j in enumerate(user_list):
-                    line += str(i+1)  +'：'+  j + '; '
-                print(line)
-                input_one = input('>> There are recent users ,type a user (index or name)'
-                            ' to send message,type "b" to back:\n')
-                if input_one == 'b':
+                user_name = user_list[num-1]
+            else:
+                if input_one not in user_list:
+                    print('>>>You type a bad user_name ...\n')
                     continue
-                if input_one.isdigit():
-                    num = int(input_one)
-                    if num>10 or num <1:
-                        print('You type a bad index ...')
-                        continue
-                    user_name = user_list[num-1]
-                else:
-                    if input_one not in user_list:
-                        print('\n>>>You type a bad user_name ...')
-                        continue
-                    user_name =input_one
+                user_name =input_one
 
-            # choose a person previous connect with
-            if command == 'r':
-                user_name = user_list[0]
-
+        # choose a person previous connect with
+        if command == 'l':
+            if not user_list:
+                print('>>> No last user !!!\n')
+                continue           
+            user_name = user_list[0]
 
 
         # User has been selected,now can send message to this user in the cycle
@@ -215,7 +186,7 @@ def print_content(msg):
 
     handle_user(user_name)
     line_message = get_datetime() +''+user_name + ':  ' + message
-    send_to_scroll_server(line_message)
+    handle_message(user_name, line_message)
     
 
 
@@ -234,8 +205,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
 
 
 
