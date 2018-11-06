@@ -137,18 +137,14 @@ def input_help(_help):
             user_name = user_list[0]
 
         # User has been selected,now can send message to this user in the cycle
-        print('>>Type "b" to exit a conversation,type "h" get all chatting records ')
+        print('>>Type "b" to exit a conversation... ')
         while 1:
             message = input('{} :'.format(user_name))
-
-            if  message == 'h':
+            if not message:
                 if user_name in message_dict.keys():
                     for mes in message_dict[user_name]:
                         print (mes)
                     print()
-                continue
-
-            if not message:
                 continue
 
             if message == 'b':
