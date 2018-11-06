@@ -17,7 +17,8 @@ b_lock = _thread.allocate_lock()
 # creat a tcp client to send message to server
 tcpCliSock = socket(AF_INET, SOCK_STREAM)
 tcpCliSock.connect(('127.0.0.1', 8888))
-socket_flag = True
+
+
 
 
 def get_datetime():
@@ -51,19 +52,15 @@ def handle_message(user_name,line_message):
 
 
 
-def send_to_scroll_server(message,retry=3):
+def send_to_scroll_server(message):
     """send received message to local server for print"""
-    global tcpCliSock,socket_flag
-    if not socket_flag:
-        return
-    while retry:
-        try:
-            return tcpCliSock.send(message.encode('utf-8', 'ignore'))
-        except Exception as e:
-            tcpCliSock.close()
-            tcpCliSock.connect(('127.0.0.1', 8888))
-            print(e);retry-=1
-    socket_flag = False
+    global tcpCliSock
+    try:
+        tcpCliSock.send(message.encode('utf-8', 'ignore'))
+    except Exception as e:
+        tcpCliSock.close()
+        tcpCliSock.connect(('127.0.0.1', 8888))
+        print(e)
 
 
 
