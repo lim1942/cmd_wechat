@@ -48,7 +48,7 @@ def handle_message(user_name,line_message):
         message_dict[user_name] = [line_message]
     else:
         message_dict[user_name].append(line_message)
-    send_to_scroll_server(line_message)
+    _thread.start_new_thread (send_to_scroll_server,(line_message,))
     b_lock.release()
 
 
@@ -65,8 +65,7 @@ def send_to_scroll_server(message):
         tcpCliSock.send(message)
         tcpCliSock.close()
     except Exception as e:
-        print(e)
-
+    	pass
 
 def input_help(_help):
     """function to choose person and send message"""
