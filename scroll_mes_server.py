@@ -16,10 +16,11 @@ print('Start a local server to print message ... \n')
 while True:
     newSocket,destAddr = serSocket.accept()
     try:
-        while True:
-            recvData = newSocket.recv(1024)
-            if len(recvData)>0:
-            	print(recvData.decode('utf-8'))
+        recvData = newSocket.recv(100000)
+        if len(recvData)>0:
+        	print(recvData.decode('utf-8'))
+    except Exception as e:
+    	print(e)
     finally:
         newSocket.close()
 
