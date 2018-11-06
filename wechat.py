@@ -56,11 +56,17 @@ def send_to_scroll_server(message):
     """send received message to local server for print"""
     global tcpCliSock
     try:
-        tcpCliSock.send(message.encode('utf-8', 'ignore'))
+        try:
+            message = message.encode('utf-8', 'ignore')
+        except Exception as e:
+            print(e)
+            message = '不支持的消息'.encode('utf-8')
+        tcpCliSock.send(message)
     except Exception as e:
-        tcpCliSock.close()
-        tcpCliSock.connect(('127.0.0.1', 8888))
         print(e)
+        tcpCliSock.close()
+        tcpCliSock = socket(AF_INET, SOCK_STREAM)
+        tcpCliSock.connect(('127.0.0.1', 8888))
 
 
 
@@ -131,17 +137,27 @@ def input_help(_help):
         if command == 'r':
             user_name = user_list[0]
 
+        # handle bad input
+        else:
+            print('>> bad input \n')
+            continue
+
 
         # User has been selected,now can send message to this user in the cycle
         print('>>Type b() to exit a conversation,type h() get all chatting records ')
         while 1:
             message = input('{} :'.format(user_name))
+
             if  message == 'h()':
                 if user_name in message_dict.keys():
                     for mes in message_dict[user_name]:
                         print (mes)
                     print()
                 continue
+
+            if not message:
+                continue
+
             if message == 'b()':
                 break
 
@@ -180,9 +196,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
 
 
 
