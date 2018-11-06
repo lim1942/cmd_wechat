@@ -1,3 +1,4 @@
+# coding=utf-8
 # author : lim
 # email : 940711277@qq.com
 
@@ -21,10 +22,10 @@ b_lock = _thread.allocate_lock()
 
 
 
+
 def get_datetime():
     """retuan date now"""
     return time.strftime('%Y-%m-%d %H:%M:%S ')
-
 
 
 def handle_user(user_name):
@@ -40,7 +41,6 @@ def handle_user(user_name):
     a_lock.release()
 
 
-
 def handle_message(user_name,line_message):
     """ handle message dict func,_thread safe """
     b_lock.acquire()
@@ -50,7 +50,6 @@ def handle_message(user_name,line_message):
         message_dict[user_name].append(line_message)
     send_to_scroll_server(line_message)
     b_lock.release()
-
 
 
 def send_to_scroll_server(message):
@@ -67,7 +66,6 @@ def send_to_scroll_server(message):
         tcpCliSock.close()
     except Exception as e:
         print(e)
-
 
 
 def input_help(_help):
@@ -138,7 +136,6 @@ def input_help(_help):
                 continue           
             user_name = user_list[0]
 
-
         # User has been selected,now can send message to this user in the cycle
         print('>>Type "b" to exit a conversation,type "h" get all chatting records ')
         while 1:
@@ -164,8 +161,6 @@ def input_help(_help):
             handle_message(user_name, line_message)
 
 
-
-
 def get_all_friends():
     global all_friends_line, all_friends_list
     if (not all_friends_list) or (not all_friends_line):
@@ -174,8 +169,6 @@ def get_all_friends():
         for  friend in all_friends:
             _name = friend['RemarkName'] or friend['NickName']
             all_friends_line += str(j)+'：'+_name + '; '; all_friends_list.append(_name); j+=1
-
-
 
 
 @itchat.msg_register(itchat.content.TEXT)
@@ -189,8 +182,6 @@ def print_content(msg):
     handle_message(user_name, line_message)
     
 
-
-
 def main():
     """ main func,start a thread to input message,in main 
         process run itchat server to receive message """
@@ -199,6 +190,8 @@ def main():
 
     itchat.auto_login(hotReload=True)
     itchat.run()
+
+
 
 
 
