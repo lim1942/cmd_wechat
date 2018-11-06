@@ -9,6 +9,7 @@ python3 + itchat
 mac/windows/linux
 
 三.运行
+
 1.安装好python3以后，pip install itchat (安装itchat)
 
 2.下载本项目进入项目目录
@@ -18,8 +19,11 @@ mac/windows/linux
 4.运行后，进行扫码登录，即可收发消息啦
 
 （a实现了从所有人中选择一个发消息
+
 b实现了从最近10个联系人中选择一个发消息
+
 c实现了选择上一个联系人发消息
+
 d打印与该联系人的聊天记录）
 
 四.python3 scroll_mess_server.py （可选运行）
