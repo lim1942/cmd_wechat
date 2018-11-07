@@ -5,14 +5,14 @@
 import time
 import itchat
 import _thread
-from socket import *
+import socket
 
 
 # get user list and message dict to save user and message
 user_list = list()
 message_dict = dict()
 
-# to storege all user name
+# to storege all friends name
 all_friends_list = []
 all_friends_line =''
 
@@ -48,14 +48,15 @@ def handle_message(user_name,line_message):
         message_dict[user_name] = [line_message]
     else:
         message_dict[user_name].append(line_message)
-    _thread.start_new_thread (send_to_scroll_server,(line_message,))
+    _thread.start_new_thread(send_to_scroll_server,(line_message,))
     b_lock.release()
 
 
 def send_to_scroll_server(message):
     """send received message to local server for print"""
     try:
-        tcpCliSock = socket(AF_INET, SOCK_STREAM)
+        tcpCliSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        tcpCliSock.settimeout(0.01)
         tcpCliSock.connect(('127.0.0.1', 8888))
         try:
             message = message.encode('utf-8', 'ignore')
@@ -65,10 +66,26 @@ def send_to_scroll_server(message):
         tcpCliSock.send(message)
         tcpCliSock.close()
     except Exception as e:
-    	pass
+        pass
+
+
+def get_all_friends():
+    """func to parse all friends to a list"""
+    global all_friends_line, all_friends_list
+    if (not all_friends_list) or (not all_friends_line):
+        index = 1
+        all_friends_line = ''
+        all_friends_list=[]
+        all_friends = itchat.get_friends(update=True)
+        for  friend in all_friends:
+            _name = friend['RemarkName'] or friend['NickName']
+            all_friends_line += str(index)+'：'+_name + '; '
+            all_friends_list.append(_name)
+            index+=1
+
 
 def input_help(_help):
-    """function to choose person and send message"""
+    """function to choose a friend and send message"""
     print(_help)
     time.sleep(5)
     while 1:
@@ -147,25 +164,13 @@ def input_help(_help):
                         print (mes)
                     print()
                 continue
-
             if message == 'b':
                 break
-
             user = itchat.search_friends(name=user_name)[0]
             user.send(message)
             line_message = get_datetime() +''+ '* Me *' + ':  ' + message
             handle_user(user_name)
             handle_message(user_name, line_message)
-
-
-def get_all_friends():
-    global all_friends_line, all_friends_list
-    if (not all_friends_list) or (not all_friends_line):
-        j = 1;all_friends_line = '';all_friends_list=[]
-        all_friends = itchat.get_friends(update=True)
-        for  friend in all_friends:
-            _name = friend['RemarkName'] or friend['NickName']
-            all_friends_line += str(j)+'：'+_name + '; '; all_friends_list.append(_name); j+=1
 
 
 @itchat.msg_register(itchat.content.TEXT)
@@ -175,7 +180,7 @@ def print_content(msg):
     user_name = msg['User']['RemarkName'] or msg['User']['NickName']
 
     handle_user(user_name)
-    line_message = get_datetime() +''+user_name + ':  ' + message
+    line_message = get_datetime() +'' + user_name +':  '+ message
     handle_message(user_name, line_message)
     
 
