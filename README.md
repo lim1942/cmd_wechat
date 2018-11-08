@@ -21,10 +21,10 @@ mac /windows /linux
 ```
 
 ## 四.运行
-- 1.安装好python3以后，pip install itchat (安装itchat)
-- 2.下载本项目进入项目目录
-- 3.python3 wechat.py 运行后，进行扫码登录，即可收发消息啦
-- 4.python3 scroll_mess_server.py （可选运行）运行后可打印实时收到的新消息,在 wechat.py 运行后才可运行。  
+- 1. pip install itchat   (安装itchat)
+- 2. git clone https://github.com/lim1942/cmd_wechat   (下载本项目进入项目目录)
+- 3. python3 wechat.py    (运行后，进行扫码登录，即可收发消息啦)
+- 4. python3 scroll_mess_server.py  （可选运行）运行后可打印实时收到的新消息,在 wechat.py 运行后才可运行。  
 
 
 ## 五.展示
