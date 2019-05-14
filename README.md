@@ -42,9 +42,6 @@ mac /windows /linux
 
 
 
--
--作者：何林 
--e-mail:940711277@qq.com
 
 
 
