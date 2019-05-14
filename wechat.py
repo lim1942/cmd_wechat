@@ -192,7 +192,7 @@ def choose_friend_and_chat():
                 friend = itchat.search_friends(name=friend_name)[0]
                 friend.send(message)
                 # 格式化发送的消息
-                line_message = f"{get_datetime_now()} 我:  {message}"
+                line_message = f"{get_datetime_now()} To {friend_name}:  {message}"
                 # 更新最近联系人列表
                 update_recently_friends_list_and_line(friend_name)
                 # 处理消息，存到消息记录大字典，发送到滚动屏幕
@@ -212,7 +212,7 @@ def receive_handle(msg):
     # 更新最近联系人列表
     update_recently_friends_list_and_line(friend_name)
     # 格式化收到的消息
-    line_message = f"{get_datetime_now()} {friend_name}: {message}"
+    line_message = f"{get_datetime_now()} From {friend_name}: {message}"
     # 添加消息到消息记录大字典，发送到滚动屏幕
     save_message_and_send_to_terminal(friend_name, line_message)
     
